@@ -12,6 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+app.use((err: any, req: any, res: any, next: any) => {
+    if (err instanceof SyntaxError && 'status' in err && err.message.includes('JSON')) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "The sent data is not in a valid JSON format; please check the quotation marks and spaces"
+        });
+    }
+    next();
+});
+
 app.use(cors());
 
 app.get('/', (req, res) => {
