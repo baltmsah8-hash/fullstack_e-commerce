@@ -2,7 +2,8 @@ import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 const authMiddleware = async (req: Request, res: Response, next: () => void) => {
-    const token = req.headers.token as string;
+    const cookieName = process.env.AUTH_TOKEN as string;
+    const token = req.cookies[cookieName] || "token";
     if (!token) {
         return res.status(400).json({ success: false, message: "Token missing" })
     }

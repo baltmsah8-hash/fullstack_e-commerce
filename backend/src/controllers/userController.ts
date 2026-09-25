@@ -14,12 +14,23 @@ const login = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).json({ success: false, message: "Error In Email Or Password" });
         }
+
         const passwordvalid = await bcrypt.compare(password, user.password);
         if (!passwordvalid) {
             return res.status(401).json({ success: false, message: "Error In Email Or Password" });
         }
+
         const token = createToken(user._id.toString());
-        res.status(200).json({ success: true, message: "Login Successful", token });
+        const cookieName = process.env.AUTH_TOKEN as string;
+
+        res.cookie(cookieName || "token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 6 * 60 * 60 * 1000,
+        })
+
+        res.status(200).json({ success: true, message: "Login Successful", user: { name: user.name, email: user.email } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -30,6 +41,12 @@ const createToken = (id: string): string => {
     return jwt.sign({ id }, process.env.JWT_SECRET as string);
 }
 
+const logout = async (req: Request, res: Response) => {
+    const tokenName = process.env.AUTH_TOKEN as string;
+    res.clearCookie(tokenName);
+    return res.status(200).json({ success: true, message: "Logged out successully" });
+};
+
 const register = async (req: Request, res: Response) => {
     const { name, email, password } = req.body as { name: string; email: string; password: string };
     try {
@@ -37,18 +54,29 @@ const register = async (req: Request, res: Response) => {
         if (isExist) {
             return res.status(400).json({ success: false, message: "Email Already Exist" });
         }
+
         if (!validator.isEmail(email)) {
             return res.status(400).json({ success: false, message: "Invalid Email" });
         }
+
         const hashedPassword = await bcrypt.hash(password, 12);
         const newUser = new userModel({ name, email, password: hashedPassword });
         const savedUser = await newUser.save();
         const token = createToken(savedUser._id.toString());
-        res.status(201).json({ success: true, message: "User Registered Successfully", token });
+        const cookieName = process.env.AUTH_TOKEN as string;
+
+        res.cookie(cookieName || "token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 6 * 60 * 60 * 1000,
+        })
+
+        res.status(201).json({ success: true, message: "User Registered Successfully" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
-export { login, register };
+export { login, logout, register };
