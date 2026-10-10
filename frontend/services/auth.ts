@@ -39,7 +39,7 @@ const getUserData = async (): Promise<UserType | undefined> => {
     }
 };
 
-const getUsers = async () => {
+const getUsers = async (): Promise<UserType[] | undefined> => {
         const api: string = process.env.NEXT_PUBLIC_ALL_USERS_API || "";
     if (!api) {
         console.error("Users API URL is not configured");
@@ -59,7 +59,7 @@ const getUsers = async () => {
         const data = await res.json();
 
         if (res.ok) {
-            const mainData: UserType = data.users || data.data;
+            const mainData: UserType[] = data.users || data.data;
             return mainData;
         } else {
             console.error(data.message || "Unauthorized session or expired token");

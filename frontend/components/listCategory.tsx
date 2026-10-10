@@ -1,7 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-const ListCategory = ({ onCategoryChange }) => {
+interface ListCategoryProps {
+    onCategoryChange: (category: string) => void;
+}
+
+const ListCategory = ({ onCategoryChange }: ListCategoryProps) => {
     const menuWords: string[] = ["All", "Men", "Women", "Kids", "Technologies"];
     const [active, setActive] = useState(0);
     const [coords, setCoords] = useState<{ left: number; width: number }>({ left: 0, width: 0 });

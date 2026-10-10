@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { getUsers, UserType } from "@/services/auth";
 
-const ManageUsers = ({ id }: { id: string }) => {
+const ManageUsers = ({ id }: { id?: string }) => {
     const [users, setUsers] = useState<UserType[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [actionId, setActionId] = useState<string | null>(null);

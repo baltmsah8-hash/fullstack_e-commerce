@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useContext, useState } from "react";
+import React, { Suspense, useEffect, useContext, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CartContext } from "@/context/cartContext";
 import { CheckCircle2, XCircle, ShoppingBag, Loader2, ArrowRight } from "lucide-react";
 
-export default function VerifyPage() {
+function VerifyPageContent() {
     const searchParams = useSearchParams();
     const context = useContext(CartContext);
     const { clearCart } = context || { clearCart: () => { } };
@@ -81,5 +81,19 @@ export default function VerifyPage() {
                 )}
             </div>
         </main>
+    );
+}
+
+export default function VerifyPage() {
+    return (
+        <Suspense
+            fallback={
+                <main className="w-full min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
+                    <Loader2 className="h-12 w-12 animate-spin text-emerald-600 font-bold" />
+                </main>
+            }
+        >
+            <VerifyPageContent />
+        </Suspense>
     );
 }

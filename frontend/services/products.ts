@@ -1,10 +1,10 @@
 interface Product {
-    _id?: string;
+    _id: string;
     name: string;
     description: string;
     price: number;
     image: string;
-    category?: string;
+    category: string;
 }
 
 const GetProducts = async (): Promise<Product[] | undefined>  => {
