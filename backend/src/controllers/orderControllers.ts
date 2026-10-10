@@ -3,6 +3,8 @@ import OrderModel from "../models/orderModel";
 import UserModel from "../models/userModel";
 import Stripe from "stripe";
 import productModel from "../models/productModel";
+import { Tracker } from "../utils/analytics";
+import orderModel from "../models/orderModel";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
@@ -97,10 +99,18 @@ const stripeWebhook = async (req: Request, res: Response) => {
         const session = event.data.object as Stripe.Checkout.Session;
         const orderId = session.metadata?.orderId;
         const userId = session.metadata?.userId;
+        const order = await orderModel.findOne({ orderId });
         if (orderId) {
-            await OrderModel.findByIdAndUpdate(orderId, { payment: true });
+            if (order) {
+                order.payment = true;
+                await order.save();
+            }
             await UserModel.findByIdAndUpdate(userId, { cartData: {} });
         }
+        const salesTracker = new Tracker("order", "Successfully operation");
+        await salesTracker.postNotification({ 
+            orderId: orderId,
+            amount: order?.amount });
     }
     res.status(200).json({ received: true });
 };
@@ -119,7 +129,7 @@ const userOrder = async (req: Request, res: Response) => {
 
 const listOrders = async (req: Request, res: Response) => {
     try {
-        const orders = await OrderModel.find({});
+        const orders = await OrderModel.find({}).sort({ createdAt: -1 });
         res.status(200).json({ success: true, data: orders });
     } catch (err) {
         console.error(err);

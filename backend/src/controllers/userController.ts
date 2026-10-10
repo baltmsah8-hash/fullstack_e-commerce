@@ -4,12 +4,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import validator from "validator";
 import dotenv from "dotenv";
+import type { AuthenticatedRequest } from "../middleware/auth";
 
 dotenv.config();
 
 const login = async (req: Request, res: Response) => {
     const { email, password } = req.body as { email: string; password: string };
-    try{
+    try {
         const user = await userModel.findOne({ email });
         if (!user) {
             return res.status(404).json({ success: false, message: "Error In Email Or Password" });
@@ -21,13 +22,13 @@ const login = async (req: Request, res: Response) => {
         }
 
         const token = createToken(user._id.toString());
-        const cookieName = process.env.AUTH_TOKEN as string;
+        const cookieName = process.env.AUTH_TOKEN ? process.env.AUTH_TOKEN : "token";
 
-        res.cookie(cookieName || "token", token, {
+        res.cookie(cookieName, token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 6 * 60 * 60 * 1000,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
         })
 
         res.status(200).json({ success: true, message: "Login Successful", user: { name: user.name, email: user.email } });
@@ -38,12 +39,14 @@ const login = async (req: Request, res: Response) => {
 };
 
 const createToken = (id: string): string => {
-    return jwt.sign({ id }, process.env.JWT_SECRET as string);
+    return jwt.sign({ id },
+        process.env.JWT_SECRET as string,
+        { expiresIn: "30d" });
 }
 
 const logout = async (req: Request, res: Response) => {
-    const tokenName = process.env.AUTH_TOKEN as string;
-    res.clearCookie(tokenName);
+    const cookieName = process.env.AUTH_TOKEN ? process.env.AUTH_TOKEN : "token";
+    res.clearCookie(cookieName);
     return res.status(200).json({ success: true, message: "Logged out successully" });
 };
 
@@ -60,12 +63,18 @@ const register = async (req: Request, res: Response) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
-        const newUser = new userModel({ name, email, password: hashedPassword });
+        const newUser = new userModel({ 
+            name, 
+            email, 
+            password: hashedPassword, 
+            admin: email === "abdo@gmail.com" ? true : false 
+        });
+
         const savedUser = await newUser.save();
         const token = createToken(savedUser._id.toString());
-        const cookieName = process.env.AUTH_TOKEN as string;
+        const cookieName = process.env.AUTH_TOKEN ? process.env.AUTH_TOKEN : "token";
 
-        res.cookie(cookieName || "token", token, {
+        res.cookie(cookieName, token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
@@ -79,4 +88,64 @@ const register = async (req: Request, res: Response) => {
     }
 };
 
-export { login, logout, register };
+const profile = async (req: Request, res: Response) => {
+    try {
+        const userId = (req as AuthenticatedRequest).userId;
+        const user = await userModel.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.status(200).json({ success: true, user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+const allUsers = async (req: Request, res: Response) => {
+    try {
+        const users = await userModel.find({}).select('-password');
+        res.status(200).json({ success: true, users: users });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+const changeRole = async (req: Request, res: Response) => {
+    const userId: string = req.body.id;
+    const admin: boolean = req.body.admin;
+    try {
+        const user = await userModel.findByIdAndUpdate(userId, { admin: admin ? false : true }).select("-password");
+        if (!user) {
+            return res.status(404).json({ success: false, message: "user not found" });
+        }
+        res.status(200).json({ success: true, message: "User updated successfully", user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+const removeUser = async (req: Request, res: Response) => {
+    const userId = req.body.id;
+    const adminId = (req as any).userId;
+    if (userId === adminId) {
+        return res.status(400).json({ success: false, message: "Action denied. You cannot delete your own admin account!" });
+    }
+
+    try {
+        const user = await userModel.findByIdAndDelete(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User account not found or already deleted" });
+        }
+
+        res.status(200).json({ success: true, message: "User account permanently terminated" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+export { login, logout, register, profile, allUsers, changeRole, removeUser };

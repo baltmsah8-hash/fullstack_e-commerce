@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import userModel from "../models/userModel";
+import { DashboardAnalytics } from "../utils/analytics";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -20,15 +21,18 @@ const adminLogin = async (req: Request, res: Response) => {
             return res.status(403).json({ success: false, message: "You are not an admin" });
         }
 
-        const token = jwt.sign(
-            { id: user._id, isAdmin: user.admin },
-            process.env.JWT_SECRET as string,
-            { expiresIn: "1d" }
-        );
+        const token = createToken(user._id.toString(), user.admin as boolean | string);
+        const cookieName = process.env.AUTH_TOKEN ? process.env.AUTH_TOKEN : "token";
+
+        res.cookie(cookieName, token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 6 * 60 * 60 * 1000,
+        })
 
         res.status(200).json({ 
             success: true,
-            token,
             user: {
                 name: user.name,
                 email: user.email,
@@ -41,4 +45,35 @@ const adminLogin = async (req: Request, res: Response) => {
     }
 };
 
-export default adminLogin;
+const createToken = (id: string, admin: boolean | string): string => {
+    return jwt.sign({ id, admin },
+            process.env.JWT_SECRET as string,
+            { expiresIn: "6h" });
+};
+
+
+const getDashboardStats = async (req: Request, res: Response) => {
+    try {
+        const analytics = new DashboardAnalytics();
+
+        const [usersCount, ordersCount, totalEarnings] = await Promise.all([
+            analytics.getUsersCount(),
+            analytics.getOrdersCount(),
+            analytics.getTotalEarnings()
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                totalUsers: usersCount,
+                totalOrders: ordersCount,
+                totalEarnings: totalEarnings
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+
+export { adminLogin, getDashboardStats};

@@ -18,7 +18,9 @@ const addToCart = async (req: Request, res: Response) => {
             cartData[itemId] += 1;
         }
 
-        await userModel.findByIdAndUpdate(userId, { cartData });
+        userData.cartData = cartData;
+        userData.markModified("cartData");
+        await userData.save();
         res.status(201).json({ success: true, message: "Product Added To cart" });
     } catch (err) {
         console.error(err);
@@ -29,7 +31,7 @@ const addToCart = async (req: Request, res: Response) => {
 const removeItemFromCart = async (req: Request, res: Response) => {
     try {
         const userId = req.userId;
-        const { id: itemId } = req.body;
+        const { id: itemId, type } = req.body;
         let userData = await userModel.findById(userId);
 
         if (!userData) {
@@ -37,7 +39,9 @@ const removeItemFromCart = async (req: Request, res: Response) => {
         }
 
         if (itemId) {
-            if (userData.cartData[itemId]) {
+            if (type === "delete") {
+                delete userData.cartData[itemId];
+            } else {
                 userData.cartData[itemId] -= 1;
                 if (userData.cartData[itemId] <= 0) {
                     delete userData.cartData[itemId];
@@ -47,6 +51,7 @@ const removeItemFromCart = async (req: Request, res: Response) => {
             userData.cartData = {};
         }
 
+        userData.markModified("cartData");
         await userData.save();
         res.status(201).json({
             success: true,
@@ -89,6 +94,7 @@ const clearCart = async (req: Request, res: Response) => {
         }
 
         user.cartData = {};
+        user.markModified("cartData");
         await user.save()
 
         res.status(200).json({ 

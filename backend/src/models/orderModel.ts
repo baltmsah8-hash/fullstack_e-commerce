@@ -11,9 +11,8 @@ const orderSchema = new mongoose.Schema({
         enum: ['pending', 'on the way', 'delivered'],
         default: 'pending',
     },
-    date: {type: String, default: Date.now()},
     payment: {type: Boolean, default: false},
-});
+},{ timestamps: true });
 
 const orderModel = mongoose.model('Order', orderSchema);
 
