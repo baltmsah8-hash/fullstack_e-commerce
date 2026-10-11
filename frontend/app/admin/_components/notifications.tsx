@@ -62,14 +62,14 @@ const Notifications = ({ notifications, setNotifications, loading }: Notificatio
             </div>
 
             {loading ? (
-                <div className="w-full py-20 flex flex-col items-center justify-center gap-2 bg-white">
+                <div className="w-full py-20 flex flex-col items-center justify-center gap-2">
                     <Loader2 className="h-8 w-8 animate-spin text-emerald-600 font-bold" />
                     <p className="text-xs text-gray-400 font-medium">
                         Syncing commercial telemetry streams...
                     </p>
                 </div>
             ) : notifications.length === 0 ? (
-                <div className="w-full max-w-xl w-[80%] bg-white border border-gray-100 p-12 rounded-2xl text-center shadow-xs flex flex-col items-center justify-center gap-2">
+                <div className="w-full max-w-xl w-[80%] border border-gray-100 p-12 rounded-2xl text-center shadow-xs flex flex-col items-center justify-center gap-2">
                     <Bell size={28} className="text-gray-300 animate-pulse" />
                     <h4 className="text-sm font-bold text-gray-700">
                         Ledger Buffer Empty
@@ -80,7 +80,7 @@ const Notifications = ({ notifications, setNotifications, loading }: Notificatio
                     </p>
                 </div>
             ) : (
-                <div className="w-full max-w-xl w-[80%] flex flex-col gap-4 bg-white">
+                <div className="w-full max-w-xl w-[80%] flex flex-col gap-4">
                     {notifications.map((notif) => {
                         const isContact = notif.title === "contact";
                         const isOrder = notif.title === "order";

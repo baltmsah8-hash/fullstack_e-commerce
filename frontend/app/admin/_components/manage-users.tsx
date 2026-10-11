@@ -95,14 +95,14 @@ const ManageUsers = ({ id }: { id?: string }) => {
             </div>
 
             {loading ? (
-                <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-center bg-white">
+                <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-center">
                     <Loader2 className="h-10 w-10 animate-spin text-emerald-600 font-bold" />
                     <p className="text-xs text-gray-400 font-medium">
                         Fetching registered users list...
                     </p>
                 </div>
             ) : users.length === 0 ? (
-                <div className="w-full bg-white border border-gray-100 p-12 rounded-2xl text-center shadow-xs flex flex-col items-center justify-center gap-2">
+                <div className="w-full border border-gray-100 p-12 rounded-2xl text-center shadow-xs flex flex-col items-center justify-center gap-2">
                     <Users size={32} className="text-gray-300 animate-pulse" />
                     <h4 className="text-sm font-bold text-gray-700">No Users Found</h4>
                     <p className="text-xs text-gray-400 max-w-xs">
