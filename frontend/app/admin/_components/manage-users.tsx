@@ -82,7 +82,7 @@ const ManageUsers = ({ id }: { id?: string }) => {
     }, []);
 
     return (
-        <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200">
+        <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200 bg-white">
             <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight flex items-center gap-2">
                     <Users size={24} className="text-emerald-600" />
@@ -95,7 +95,7 @@ const ManageUsers = ({ id }: { id?: string }) => {
             </div>
 
             {loading ? (
-                <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-center">
+                <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-center bg-white">
                     <Loader2 className="h-10 w-10 animate-spin text-emerald-600 font-bold" />
                     <p className="text-xs text-gray-400 font-medium">
                         Fetching registered users list...

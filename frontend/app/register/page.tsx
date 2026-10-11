@@ -94,7 +94,7 @@ const Register = () => {
     }, [message]);
 
     return (
-    <main className="w-full min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
+    <main className="w-full min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8 flex flex-col gap-6 animate-in zoom-in-95 duration-200">
             
             <Link href="/" className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors group self-start">

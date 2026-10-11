@@ -21,7 +21,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${rubik.className} h-full antialiased overflow-x-hidden scroll-smooth`}
+      className={`${rubik.className} h-full antialiased 
+        overflow-x-hidden scroll-smooth`}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden scroll-smooth">
         <CartProvider>

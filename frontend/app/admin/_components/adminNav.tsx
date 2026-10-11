@@ -8,7 +8,7 @@ interface AdminNavbarProps {
 
 const AdminNavbar = ({ onMenuClick }: AdminNavbarProps) => {
     return (
-        <header className="w-full h-16 bg-gray-950 border-b border-gray-800 px-4 flex flex-row items-center justify-between sticky top-0 z-30 shadow-md md:hidden block animate-in fade-in duration-200">
+        <header className="w-full h-18 bg-gray-950 border-b border-gray-800 px-4 flex flex-row items-center justify-between sticky top-0 z-30 shadow-md md:hidden block animate-in fade-in duration-200">
             <div className="flex items-center gap-3">
                 <button 
                     onClick={onMenuClick}

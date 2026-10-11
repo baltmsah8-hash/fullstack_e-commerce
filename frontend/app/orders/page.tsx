@@ -68,7 +68,7 @@ const UserOrdersPage = () => {
     }, []);
 
     return (
-        <div className="w-full min-h-screen bg-gray-50/50 py-10 px-4 md:px-10 lg:px-20 animate-in fade-in duration-200">
+        <div className="w-full min-h-screen bg-gray-50 py-10 px-4 md:px-10 lg:px-20 animate-in fade-in duration-200">
             <div className="max-w-3xl mx-auto flex flex-col gap-6">
                 <div className="flex flex-col gap-1 border-b border-gray-100 pb-4">
                     <h1 className="text-2xl font-black text-gray-800 tracking-tight flex items-center gap-2">

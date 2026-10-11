@@ -74,7 +74,7 @@ const Contact = () => {
     return (
         <section
             id="contact"
-            className="w-full min-h-96 py-6 px-2.5 flex gap-6 flex-col items-center select-none animate-in fade-in duration-200"
+            className="w-full min-h-96 py-6 px-2.5 flex gap-6 flex-col items-center select-none animate-in fade-in duration-200 bg-white"
         >
             <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 tracking-tight mt-3">
                 Contact <span className="text-emerald-600">Us</span>

@@ -51,8 +51,8 @@ const ProductsList = () => {
     }, [])
 
     return (
-        <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200">
-            <div className="flex flex-col gap-1">
+        <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200 bg-white">
+            <div className="flex flex-col gap-1 bg-white">
                 <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight flex items-center gap-2">
                     <ShoppingBag size={24} className="text-emerald-600" />
                     <span>Products Inventory</span>

@@ -26,7 +26,7 @@ function VerifyPageContent() {
 
     if (loading) {
         return (
-            <main className="w-full min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
+            <main className="w-full min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="flex flex-col items-center gap-3 text-center">
                     <Loader2 className="h-12 w-12 animate-spin text-emerald-600 font-bold" />
                     <p className="text-sm text-gray-400 font-medium">Securing transaction feedback, please wait...</p>
@@ -36,7 +36,7 @@ function VerifyPageContent() {
     }
 
     return (
-        <main className="w-full min-h-screen bg-gray-50/50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <main className="w-full min-h-screen bg-gray-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
             <div className="w-full max-w-md bg-white border border-gray-100 p-6 md:p-8 rounded-2xl shadow-xl text-center flex flex-col items-center gap-5">
                 {success === "true" ? (
                     <>

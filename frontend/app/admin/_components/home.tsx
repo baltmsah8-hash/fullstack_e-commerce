@@ -66,7 +66,7 @@ const Home = ({ user }: AdminHomeProps) => {
     }, []);
 
     return (
-        <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200">
+        <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200 bg-white">
             <div className="flex flex-col gap-1 mt-2 md:mt-0">
                 <h2 className="text-xl md:text-2xl font-extrabold text-gray-800 tracking-tight">
                     Overview Dashboard

@@ -140,7 +140,7 @@ const AdminPage = () => {
 
     if (loading) {
         return (
-            <main className="w-full min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
+            <main className="w-full min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="flex flex-col items-center gap-3 text-center">
                     <Loader2 className="h-12 w-12 animate-spin text-emerald-600 font-bold" />
                     <p className="text-sm text-gray-400 font-medium">Verifying admin authority, please wait...</p>
@@ -150,7 +150,7 @@ const AdminPage = () => {
     }
 
     return (
-        <main className="w-full h-screen flex flex-col md:flex-row relative bg-gray-50/50 overflow-x-hidden">
+        <main className="w-full h-screen flex flex-col md:flex-row relative bg-gray-50 overflow-x-hidden">
             <Sidebar 
                 activeTab={active} 
                 setActiveTab={setActive} 

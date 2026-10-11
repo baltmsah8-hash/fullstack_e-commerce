@@ -85,7 +85,7 @@ export default function CheckoutPage() {
 
 
     return (
-        <div className="w-full min-h-screen bg-gray-50/50 py-10 px-4 md:px-10 lg:px-20 animate-in fade-in duration-200">
+        <div className="w-full min-h-screen bg-gray-50 py-10 px-4 md:px-10 lg:px-20 animate-in fade-in duration-200">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                 <div className="lg:col-span-7 flex flex-col gap-6 w-full">

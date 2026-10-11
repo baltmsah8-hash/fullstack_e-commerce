@@ -40,7 +40,7 @@ function Footer() {
                                 <Link href="/" className="hover:text-emerald-400 transition-colors">Home</Link>
                             </li>
                             <li>
-                                <Link href="/all-products" className="hover:text-emerald-400 transition-colors">Shop All</Link>
+                                <Link href="/products" className="hover:text-emerald-400 transition-colors">Shop All</Link>
                             </li>
                             <li>
                                 <Link href="/about" className="hover:text-emerald-400 transition-colors">Our Story</Link>

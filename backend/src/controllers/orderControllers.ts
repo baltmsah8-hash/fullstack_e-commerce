@@ -5,11 +5,12 @@ import Stripe from "stripe";
 import productModel from "../models/productModel";
 import { Tracker } from "../utils/analytics";
 import orderModel from "../models/orderModel";
+import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 const placeOrder = async (req: Request, res: Response) => {
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    const frontendUrl = process.env.FRONTEND_URL || "";
     try {
         const userId = req.userId;
         const { products, address } = req.body;
@@ -89,7 +90,8 @@ const stripeWebhook = async (req: Request, res: Response) => {
     let event;
 
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig!, endpointSecret!);
+        const body = (req as any).rawBody;
+        event = stripe.webhooks.constructEvent(body, sig!, endpointSecret!);
     } catch (err: any) {
         console.error(err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -99,21 +101,36 @@ const stripeWebhook = async (req: Request, res: Response) => {
         const session = event.data.object as Stripe.Checkout.Session;
         const orderId = session.metadata?.orderId;
         const userId = session.metadata?.userId;
-        const order = await orderModel.findOne({ orderId });
-        if (orderId) {
-            if (order) {
-                order.payment = true;
-                await order.save();
+
+        if (orderId && userId) {
+            try {
+                const id = new mongoose.Types.ObjectId(orderId);
+                const order = await orderModel.findOne({ _id: id });
+
+                if (order) {
+                    order.payment = true;
+                    await order.save();
+
+                    const salesTracker = new Tracker("order", "Successfully operation");
+                    await salesTracker.postNotification({ 
+                        orderId: orderId,
+                        amount: order.amount
+                    });
+                }
+
+                const idForUser = new mongoose.Types.ObjectId(userId);
+                await UserModel.findByIdAndUpdate(idForUser, { cartData: {} }); 
+
+            } catch (err) {
+                console.error("Database Error:", err);
+                return res.status(500).send("Internal server error");
             }
-            await UserModel.findByIdAndUpdate(userId, { cartData: {} });
         }
-        const salesTracker = new Tracker("order", "Successfully operation");
-        await salesTracker.postNotification({ 
-            orderId: orderId,
-            amount: order?.amount });
     }
+    
     res.status(200).json({ received: true });
 };
+
 
 const userOrder = async (req: Request, res: Response) => {
     try {

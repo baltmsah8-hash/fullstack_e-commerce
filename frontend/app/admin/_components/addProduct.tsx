@@ -113,7 +113,7 @@ const AddProduct = () => {
     }, [message]);
 
     return (
-        <div className="w-full max-w-xl mx-auto flex flex-col gap-6 animate-in fade-in duration-200">
+        <div className="w-full max-w-xl mx-auto flex flex-col gap-6 animate-in fade-in duration-200 bg-white">
             <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight flex items-center gap-2">
                     <PlusCircle size={24} className="text-emerald-600" />

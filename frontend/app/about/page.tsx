@@ -3,7 +3,7 @@ import { ShoppingBag, ShieldCheck, Truck } from "lucide-react";
 
 function About() {
   return (
-    <section id="about" className="w-full py-16 px-4 md:px-8 bg-gray-50/50">
+    <section id="about" className="w-full py-16 px-4 md:px-8 bg-gray-50">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
 
         <div className="w-full md:w-1/2 relative h-[350px] md:h-[450px] rounded-2xl overflow-hidden shadow-xl shadow-emerald-100/50 group border border-gray-100 bg-white">

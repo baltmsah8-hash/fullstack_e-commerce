@@ -24,7 +24,7 @@ const Text = () => {
 
 const Home = () => {
     return (
-        <section id="home" className="w-full min-h-[85vh] md:h-[90vh] px-4 md:px-12 flex flex-col md:flex-row justify-center items-center gap-12 bg-gradient-to-r from-white to-emerald-50/40 border-b border-gray-50">
+        <section id="home" className="w-full min-h-[85vh] md:h-[90vh] py-8 px-4 md:px-12 flex flex-col md:flex-row justify-center items-center gap-12 bg-gradient-to-r from-white to-emerald-50/40 border-b border-gray-50">
             <div className="w-full max-w-6xl mx-auto flex flex-col-reverse md:flex-row justify-between items-center gap-10">
                 <Text />
                 

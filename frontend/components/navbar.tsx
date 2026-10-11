@@ -60,9 +60,9 @@ const MainNavbar = () => {
             <nav className="w-full px-4 py-7 flex flex-row justify-between items-center 
             bg-white shadow-md shadow-emerald-400/10 sticky top-0 z-50 border-b border-gray-50">
                 <div className="h-full flex gap-6 flex-row items-center max-md:flex-row-reverse">
-                    <h1 className="text-3xl font-bold">
+                    <Link href={'/'} className="text-3xl cursor-pointer font-bold text-black">
                         <span className="text-emerald-600 text-4xl">Woo</span> Store
-                    </h1>
+                    </Link>
                 { 
                 pathname == '/' || pathname == '/products' ?
                     <div className="relative">

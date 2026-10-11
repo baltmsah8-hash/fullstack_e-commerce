@@ -62,7 +62,7 @@ const Notifications = ({ notifications, setNotifications, loading }: Notificatio
             </div>
 
             {loading ? (
-                <div className="w-full py-20 flex flex-col items-center justify-center gap-2">
+                <div className="w-full py-20 flex flex-col items-center justify-center gap-2 bg-white">
                     <Loader2 className="h-8 w-8 animate-spin text-emerald-600 font-bold" />
                     <p className="text-xs text-gray-400 font-medium">
                         Syncing commercial telemetry streams...
@@ -80,7 +80,7 @@ const Notifications = ({ notifications, setNotifications, loading }: Notificatio
                     </p>
                 </div>
             ) : (
-                <div className="w-full max-w-xl w-[80%] flex flex-col gap-4">
+                <div className="w-full max-w-xl w-[80%] flex flex-col gap-4 bg-white">
                     {notifications.map((notif) => {
                         const isContact = notif.title === "contact";
                         const isOrder = notif.title === "order";

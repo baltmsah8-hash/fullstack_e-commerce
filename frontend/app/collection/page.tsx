@@ -54,7 +54,7 @@ const Collection = () => {
     }, []);
 
     return (
-        <section id="collections" className="w-full min-h-[450px] py-6 px-2.5 flex gap-6 flex-col items-center justify-center">
+        <section id="collections" className="w-full min-h-[450px] py-6 px-2.5 flex gap-6 flex-col items-center justify-center bg-white">
             <ListCategory onCategoryChange={handelCategory} />
             
             {loading ? (

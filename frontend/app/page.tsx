@@ -5,7 +5,7 @@ import Contact from './contact/page';
 
 const Main = () => {
   return(
-    <main className="flex flex-col gap-10">
+    <main className="flex flex-col gap-10 bg-white">
       <Home />
       <Collection />
       <About />

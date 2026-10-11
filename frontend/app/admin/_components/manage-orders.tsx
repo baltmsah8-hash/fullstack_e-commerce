@@ -95,7 +95,7 @@ const ManageOrders = () => {
     }, [])
 
   return (
-    <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200">
+    <div className="w-full flex flex-col gap-6 animate-in fade-in duration-200 bg-white">
       <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight flex items-center gap-2">
@@ -107,7 +107,7 @@ const ManageOrders = () => {
       </div>
 
       {loading ? (
-        <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-center">
+        <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-center bg-white">
           <Loader2 className="h-10 w-10 animate-spin text-emerald-600 font-bold" />
           <p className="text-xs text-gray-400 font-medium">Fetching secure orders database records...</p>
         </div>
@@ -118,7 +118,7 @@ const ManageOrders = () => {
           <p className="text-xs text-gray-400 max-w-xs">No transaction records or invoice payloads detected in the active collection.</p>
         </div>
       ) : (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white">
           {orders.map((order) => {
             let parsedProducts: OrderProduct[] = [];
             try {
