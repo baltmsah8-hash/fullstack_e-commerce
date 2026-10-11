@@ -160,7 +160,7 @@ export default function CheckoutPage() {
                             <label htmlFor="full_address" className="absolute left-4 top-4 text-sm text-gray-400 bg-transparent transition-all duration-200 origin-left pointer-events-none peer-focus:text-emerald-600 peer-focus:-translate-y-3 peer-focus:scale-75 peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-75">
                                 Detailed Delivery Street Address, Apartment, Building
                             </label>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"><MapPin size={16} /></div>
+                            <div className="absolute right-4 max-md: h-[88px] top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"><MapPin size={16} /></div>
                         </div>
 
                         <div className="flex items-center gap-3 border border-emerald-500/10 bg-emerald-500/5 p-4 rounded-xl text-xs text-gray-400 font-medium leading-relaxed mt-2">
