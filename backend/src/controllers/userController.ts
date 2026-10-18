@@ -67,7 +67,7 @@ const register = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid Email" });
         }
 
-        if (password.trim().length === 0) {
+        if (password.trim().length <= 0) {
             return res.status(422).json({ success: false, message: "The password must be at least 8 characters long" })
         };
 
