@@ -21,6 +21,7 @@ export default function CheckoutPage() {
         full_address: "",
     });
     const [loading, setLoading] = useState<boolean>(false);
+    const [checkoutError, setCheckoutError] = useState<string>("");
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -34,9 +35,11 @@ export default function CheckoutPage() {
     const handleCheckoutSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
+        setCheckoutError("");
 
         const api: string = process.env.NEXT_PUBLIC_PLACE_ORDER_API || '';
         if (!api) {
+            setCheckoutError("Checkout is unavailable because the order API URL is not configured.");
             setLoading(false);
             return;
         }
@@ -46,12 +49,6 @@ export default function CheckoutPage() {
                 city: shippingForm.city,
                 full_address: shippingForm.full_address,
             },
-            products: cartItems.map((item) => ({
-                _id: item._id,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-            })),
         };
 
         try {
@@ -74,10 +71,11 @@ export default function CheckoutPage() {
                 });
                 window.location.href = data.url;
             } else {
-                alert(data.message || "Failed to generate Stripe session");
+                setCheckoutError(data.message || "Failed to generate Stripe session");
             }
         } catch (error) {
             console.error(error);
+            setCheckoutError("Could not connect to the order service. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -167,6 +165,11 @@ export default function CheckoutPage() {
                             <ShieldCheck size={18} className="text-emerald-500 shrink-0" />
                             <span>Your private credentials and logistics remain encrypted. Proceeding will securely forward parameters to the official Stripe transaction corridor.</span>
                         </div>
+                        {checkoutError && (
+                            <p role="alert" className="text-sm font-medium text-red-600">
+                                {checkoutError}
+                            </p>
+                        )}
                     </form>
                 </div>
 

@@ -14,24 +14,28 @@ const Collection = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
+    const getRandomElements = (arr: Product[], count: number): Product[] => {
+        const copy: Product[] = [];
+        const maxItems = Math.min(count, arr.length);
+        while (copy.length < maxItems) {
+            const randomIndex = Math.floor(Math.random() * arr.length);
+            const randomProduct = arr[randomIndex];
+            if (!copy.some(pro => pro._id === randomProduct._id)) {
+                copy.push(randomProduct);
+            }
+        }
+        return copy;
+    };
+
     const getData = async () => {
         setLoading(true);
         try {
             const mainData: Product[] = (await GetProducts()) ?? [];
             setProducts(mainData);
-            
-            const copy: Product[] = [];
-            const maxItems = Math.min(8, mainData.length);
 
-            while (copy.length < maxItems) {
-                const randomIndex = Math.floor(Math.random() * mainData.length);
-                const randomProduct = mainData[randomIndex];
+            const randomInitial = getRandomElements(mainData, 8);
+            setFilteredProducts(randomInitial);
 
-                if (!copy.some(pro => pro._id === randomProduct._id)) {
-                    copy.push(randomProduct);
-                }
-            }
-            setFilteredProducts(copy);
             console.log("Products loaded successfully via Service!");
         } catch (error) {
             console.error("Registration Error:", error);
@@ -42,12 +46,14 @@ const Collection = () => {
 
     const handelCategory = (selected: string): void => {
         if (selected === "All") {
-            setFilteredProducts(products);
+            const randomNew = getRandomElements(products, 8);
+            setFilteredProducts(randomNew);
         } else {
             const filtered = products.filter(pro => pro.category?.toLowerCase() === selected.toLowerCase());
             setFilteredProducts(filtered);
         }
     };
+
 
     useEffect(() => {
         getData();
@@ -56,7 +62,7 @@ const Collection = () => {
     return (
         <section id="collections" className="w-full min-h-[450px] py-6 px-2.5 flex gap-6 flex-col items-center justify-center bg-white">
             <ListCategory onCategoryChange={handelCategory} />
-            
+
             {loading ? (
                 <div className="w-full py-20 flex justify-center items-center">
                     <Loader2 className="h-12 w-12 animate-spin text-emerald-600 font-bold" />
@@ -66,9 +72,9 @@ const Collection = () => {
                     {filteredProducts.length > 0 ? (
                         filteredProducts.map((product) => {
                             return (
-                                <ProductCard 
+                                <ProductCard
                                     key={product._id}
-                                    product={product} 
+                                    product={product}
                                     onOpenModal={() => {
                                         setSelectedProduct(product);
                                         setIsModalOpen(true);
@@ -86,8 +92,8 @@ const Collection = () => {
 
             {!loading && filteredProducts.length > 0 && (
                 <div className="w-full flex justify-center mt-4">
-                    <Link 
-                        href="/products" 
+                    <Link
+                        href="/products"
                         className="group px-6 py-3 rounded-xl bg-emerald-500 text-white font-semibold text-sm
                         flex items-center gap-2 shadow-md shadow-emerald-500/10
                         transition-all duration-300 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 
@@ -99,11 +105,11 @@ const Collection = () => {
                 </div>
             )}
 
-            { isModalOpen && selectedProduct ? <ProductDetails 
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    product={selectedProduct}
-                /> : '' }
+            {isModalOpen && selectedProduct ? <ProductDetails
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                product={selectedProduct}
+            /> : ''}
         </section>
     );
 }

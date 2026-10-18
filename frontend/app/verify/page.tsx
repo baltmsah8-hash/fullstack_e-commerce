@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CartContext } from "@/context/cartContext";
 import { CheckCircle2, XCircle, ShoppingBag, Loader2, ArrowRight } from "lucide-react";
 
-function VerifyPageContent() {
+const VerifyPageContent = () => {
     const searchParams = useSearchParams();
     const context = useContext(CartContext);
     const { clearCart } = context || { clearCart: () => { } };
@@ -84,7 +84,7 @@ function VerifyPageContent() {
     );
 }
 
-export default function VerifyPage() {
+const VerifyPage = () => {
     return (
         <Suspense
             fallback={
@@ -97,3 +97,5 @@ export default function VerifyPage() {
         </Suspense>
     );
 }
+
+export default VerifyPage;
