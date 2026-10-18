@@ -1,14 +1,21 @@
 import type { Request, Response } from "express";
 import userModel from "../models/userModel";
+import productModel from "../models/productModel";
 
 
 const addToCart = async (req: Request, res: Response) => {
     try {
         const userId = req.userId;
         const { id: itemId } = req.body;
-        let userData = await userModel.findById(userId);
+        let userData = await userModel.findById(userId).select("cartData");
+
         if (!userData) {
             return res.status(404).json({ success: false, message: "User Not Found" });
+        }
+
+        const itemExists = await productModel.exists({ _id: itemId });
+        if (!itemExists) {
+            return res.status(404).json({ success: false, message: "Product Not Found" });
         }
 
         let cartData = userData.cartData || {};

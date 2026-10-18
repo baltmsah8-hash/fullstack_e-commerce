@@ -5,22 +5,35 @@ import NotificationModel from "../models/notificationModel";
 class Tracker {
     private title: string;
     private message: string;
+    private orderId: string | undefined;
 
-    constructor(title: string, message: string) {
+    constructor(title: string, message: string, orderId?: string) {
         this.title = title;
         this.message = message;
+        this.orderId = orderId;
     }
 
     async postNotification(additionalData: object = {}) {
+        const newNotification = new NotificationModel({
+            title: this.title,
+            message: this.message,
+            data: additionalData,
+            ...(this.orderId ? { orderId: this.orderId } : {}),
+        });
+
         try {
-            const newNotification = new NotificationModel({
-                title: this.title,
-                message: this.message,
-                data: additionalData
-            });
             await newNotification.save();
         } catch (error) {
-            console.error(error);
+            if (
+                this.orderId &&
+                typeof error === "object" &&
+                error !== null &&
+                "code" in error &&
+                error.code === 11000
+            ) {
+                return;
+            }
+            throw error;
         }
     }
 }
@@ -37,7 +50,7 @@ class DashboardAnalytics {
 
     async getOrdersCount(): Promise<number> {
         try {
-            return await OrderModel.countDocuments({});
+            return await OrderModel.countDocuments({ payment: true });
         } catch (err) {
             console.error(err);
             return 0;

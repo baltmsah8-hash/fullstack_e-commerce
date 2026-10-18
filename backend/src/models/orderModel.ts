@@ -11,6 +11,7 @@ const orderSchema = new mongoose.Schema({
         enum: ['pending', 'on the way', 'delivered'],
         default: 'pending',
     },
+    sessionId: {type: String, default: null},
     payment: {type: Boolean, default: false},
 },{ timestamps: true });
 

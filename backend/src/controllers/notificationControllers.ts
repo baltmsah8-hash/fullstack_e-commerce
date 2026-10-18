@@ -8,6 +8,18 @@ const createNotification = async (req: Request, res: Response) => {
     }
 
     try {
+        if (typeof name != "string" || name.trim().length < 2 || name.trim().length > 50) {
+            return res.status(400).json({ success: false, message: "Invalid name" });
+        };
+
+        if (typeof phone !== "string" || !/^(?:\+2)?01[0125]\d{8}$/.test(phone)) { 
+            return res.status(400).json({ success: false, message: "Invalid phone number" }); 
+        }
+
+        if (typeof message != "string" || message.trim().length < 10 || message.trim().length > 1000) {
+            return res.status(400).json({ success: false, message: "Invalid message" });
+        };
+
         const newNotification = new notificationModel({
             title: 'contact',
             message: message,

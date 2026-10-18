@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import validator from "validator";
 import dotenv from "dotenv";
 import type { AuthenticatedRequest } from "../middleware/auth";
+import { Tracker } from "../utils/analytics";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const login = async (req: Request, res: Response) => {
 
         const passwordvalid = await bcrypt.compare(password, user.password);
         if (!passwordvalid) {
-            return res.status(401).json({ success: false, message: "Error In Email Or Password" });
+            return res.status(404).json({ success: false, message: "Error In Email Or Password" });
         }
 
         const token = createToken(user._id.toString());
@@ -66,12 +67,15 @@ const register = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid Email" });
         }
 
+        if (password.trim().length === 0) {
+            return res.status(422).json({ success: false, message: "The password must be at least 8 characters long" })
+        };
+
         const hashedPassword = await bcrypt.hash(password, 12);
         const newUser = new userModel({ 
             name, 
             email, 
-            password: hashedPassword, 
-            admin: email === "abdo@gmail.com" ? true : false 
+            password: hashedPassword
         });
 
         const savedUser = await newUser.save();
@@ -119,11 +123,25 @@ const allUsers = async (req: Request, res: Response) => {
 const changeRole = async (req: Request, res: Response) => {
     const userId: string = req.body.id;
     const admin: boolean = req.body.admin;
+    const editorId = (req as any).userId;
+
     try {
         const user = await userModel.findByIdAndUpdate(userId, { admin: admin ? false : true }).select("-password");
+        const editor = await userModel.findById(editorId).select("email");
+
         if (!user) {
             return res.status(404).json({ success: false, message: "user not found" });
         }
+
+        if (!editor) {
+            return res.status(404).json({ success: false, message: "You are not admin" });
+        }
+
+        const noti = new Tracker("users", `${user.email} has become ${user.admin ? "admin" : "regular user"}`);
+        await noti.postNotification({ 
+            editor: editor.email,
+        });
+
         res.status(200).json({ success: true, message: "User updated successfully", user });
     } catch (error) {
         console.error(error);
@@ -134,16 +152,27 @@ const changeRole = async (req: Request, res: Response) => {
 const removeUser = async (req: Request, res: Response) => {
     const userId = req.body.id;
     const adminId = (req as any).userId;
+
     if (userId === adminId) {
         return res.status(400).json({ success: false, message: "Action denied. You cannot delete your own admin account!" });
     }
 
     try {
+        const editor = await userModel.findById(adminId).select("email");
         const user = await userModel.findByIdAndDelete(userId);
 
         if (!user) {
             return res.status(404).json({ success: false, message: "User account not found or already deleted" });
         }
+
+        if (!editor) {
+            return res.status(404).json({ success: false, message: "You are not admin" });
+        }
+
+        const noti = new Tracker("users", `${user.email} has become deleted`);
+        await noti.postNotification({ 
+            editor: editor.email,
+        });
 
         res.status(200).json({ success: true, message: "User account permanently terminated" });
     } catch (error) {

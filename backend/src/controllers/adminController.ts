@@ -14,10 +14,10 @@ const adminLogin = async (req: Request, res: Response) => {
 
         const passwordvalid = await bcrypt.compare(password, user.password);
         if (!passwordvalid) {
-            return res.status(401).json({ success: false, message: "Error In Email Or Password" });
+            return res.status(404).json({ success: false, message: "Error In Email Or Password" });
         }
 
-        if ((user.admin as string | boolean) !== true && (user.admin as string | boolean) !== "true") {
+        if ((user.admin as boolean) !== true) {
             return res.status(403).json({ success: false, message: "You are not an admin" });
         }
 
