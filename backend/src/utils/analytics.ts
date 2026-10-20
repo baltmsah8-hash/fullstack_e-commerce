@@ -61,7 +61,7 @@ class DashboardAnalytics {
         try {
             const result = await OrderModel.aggregate([
                 { $match: { payment: true } },
-                { $group: { _id: null, total: { $sum: "$amount" } } }
+                { $group: { _id: null, total: { $sum: { $subtract: ["$amount", "$shipping"] } }  } }
             ]);
             return result.length > 0 ? (result[0] as any).total : 0;
         } catch (err) {

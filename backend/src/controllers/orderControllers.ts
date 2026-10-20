@@ -166,6 +166,7 @@ const placeOrder = async (req: Request, res: Response) => {
                 };
             })),
             amount: totalAmount / 100,
+            shipping: shippingFee / 100,
             address,
             status: "pending",
             payment: false,

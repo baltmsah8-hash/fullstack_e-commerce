@@ -116,6 +116,7 @@ export default function CheckoutPage() {
                                     type="tel"
                                     id="visualPhone"
                                     placeholder=" "
+                                    minLength={11}
                                     required
                                     className="peer w-full px-4 pb-2.5 pt-6 text-sm text-gray-800 border border-gray-200 rounded-xl bg-gray-50/40 focus:outline-none focus:border-emerald-500 focus:bg-white transition-all duration-200"
                                 />
