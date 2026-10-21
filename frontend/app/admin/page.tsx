@@ -17,11 +17,12 @@ interface NotificationData {
     phone?: string;
     orderId?: string;
     amount?: number;
+    editor?: string;
 }
 
 interface NotificationType {
     _id: string;
-    title: "contact" | "order" | "stock";
+    title: "contact" | "order" | "stock" | "users";
     message: string;
     isRead: boolean;
     data: NotificationData;

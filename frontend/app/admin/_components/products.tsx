@@ -23,6 +23,8 @@ const ProductsList = () => {
     };
 
     const handleRemoveProduct = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
         setRemovingId(id);
         const api: string = process.env.NEXT_PUBLIC_REMOVE_PRODUCTS_API || "";
         try {

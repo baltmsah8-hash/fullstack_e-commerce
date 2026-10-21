@@ -27,6 +27,8 @@ const ManageUsers = ({ id }: { id?: string }) => {
     };
 
     const handleDeleteUser = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this email?")) return;
+
         setActionId(id);
         const api: string =
             process.env.NEXT_PUBLIC_REMOVE_USER_API ||
@@ -58,9 +60,11 @@ const ManageUsers = ({ id }: { id?: string }) => {
     };
 
     const handleToggleAdminRole = async (id: string, role: boolean) => {
+        if (!confirm("Are you sure about changing the validity of this email?")) return;
+
         const api: string = process.env.NEXT_PUBLIC_CHANGE_ROLE_API || "";
         try {
-            await fetch(api, {
+            const res = await fetch(api, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -69,6 +73,15 @@ const ManageUsers = ({ id }: { id?: string }) => {
                 body: JSON.stringify({ id: id, admin: role }),
                 credentials: "include",
             });
+
+            const result = await res.json();
+            if (res.ok && result.success) {
+                setUsers((prev) =>
+                    prev.map((user) => user._id === id ? { ...user, admin: !role as boolean } : user)
+                );
+            } else {
+                alert(result.message || "Error while changing email permissions");
+            }
         } catch (error) {
             console.error(error);
         } finally {

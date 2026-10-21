@@ -84,6 +84,7 @@ const Notifications = ({ notifications, setNotifications, loading }: Notificatio
                     {notifications.map((notif) => {
                         const isContact = notif.title === "contact";
                         const isOrder = notif.title === "order";
+                        const isUser = notif.title === "users";
 
                         return (
                             <div
@@ -147,6 +148,14 @@ const Notifications = ({ notifications, setNotifications, loading }: Notificatio
 
                                         <span className="font-black text-emerald-600 shrink-0">
                                             {notif.data.amount}.00 EGP
+                                        </span>
+                                    </div>
+                                )}
+
+                                {isUser && notif.data && (
+                                    <div className="w-full flex items-center justify-between pt-2 border-t border-gray-50/60 mt-1 text-[11px]">
+                                        <span className="font-medium text-gray-400 truncate max-w-[150px]">
+                                            editor: {notif.data.editor}
                                         </span>
                                     </div>
                                 )}
